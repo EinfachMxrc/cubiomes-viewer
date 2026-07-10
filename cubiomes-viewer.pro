@@ -134,6 +134,7 @@ SOURCES += \
         src/headless.cpp \
         src/maptoolsdialog.cpp \
         src/message.cpp \
+        src/netherroutedialog.cpp \
         src/presetdialog.cpp \
         src/layerdialog.cpp \
         src/mapview.cpp \
@@ -199,6 +200,7 @@ HEADERS += \
         src/headless.h \
         src/maptoolsdialog.h \
         src/message.h \
+        src/netherroutedialog.h \
         src/presetdialog.h \
         src/layerdialog.h \
         src/mapview.h \

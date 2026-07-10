@@ -408,6 +408,7 @@ QToolButton:checked {
     <addaction name="separator"/>
     <addaction name="actionDock"/>
     <addaction name="actionGoto"/>
+    <addaction name="actionNetherRoute"/>
     <addaction name="separator"/>
     <addaction name="actionScreenshot"/>
     <addaction name="actionExportImg"/>
@@ -535,6 +536,14 @@ QToolButton:checked {
   <action name="actionCopy">
    <property name="text">
     <string>Copy seeds from list</string>
+   </property>
+  </action>
+  <action name="actionNetherRoute">
+   <property name="text">
+    <string>Nether route planner</string>
+   </property>
+   <property name="toolTip">
+    <string>Convert between Overworld and Nether coordinates</string>
    </property>
   </action>
   <action name="actionCopySeedContext">

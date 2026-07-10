@@ -9,6 +9,7 @@
 #include "layerdialog.h"
 #include "maptoolsdialog.h"
 #include "message.h"
+#include "netherroutedialog.h"
 #include "presetdialog.h"
 #include "tabbiomes.h"
 #include "tablocations.h"
@@ -882,6 +883,14 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionGoto_triggered()
 {
     getMapView()->onGoto();
+}
+
+void MainWindow::on_actionNetherRoute_triggered()
+{
+    MapView *mv = getMapView();
+    NetherRouteDialog *dialog = new NetherRouteDialog(mv, (int)mv->getX(), (int)mv->getZ());
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }
 
 void MainWindow::on_actionOpenShadow_triggered()
