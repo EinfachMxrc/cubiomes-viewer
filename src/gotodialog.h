@@ -21,6 +21,7 @@ public:
 
 private slots:
     void on_lineScale_textChanged(const QString &text);
+    void on_buttonLocate_clicked();
     void on_buttonBox_clicked(QAbstractButton *button);
 
 private:

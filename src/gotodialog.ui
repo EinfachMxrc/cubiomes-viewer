@@ -102,6 +102,27 @@
     </widget>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayoutLocate">
+     <item>
+      <widget class="QComboBox" name="comboBiome">
+       <property name="toolTip">
+        <string>Biome to locate outward from the coordinates above</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonLocate">
+       <property name="toolTip">
+        <string>Find the nearest instance of the selected biome and set the coordinates to it</string>
+       </property>
+       <property name="text">
+        <string>Locate biome</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
