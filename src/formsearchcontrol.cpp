@@ -299,6 +299,7 @@ void FormSearchControl::searchLockUi(bool lock)
         ui->comboSearchType->setEnabled(false);
         ui->spinThreads->setEnabled(false);
         ui->buttonMore->setEnabled(false);
+        ui->buttonPause->setEnabled(true);
     }
     else
     {
@@ -308,6 +309,10 @@ void FormSearchControl::searchLockUi(bool lock)
         ui->buttonStart->setEnabled(true);
         ui->comboSearchType->setEnabled(true);
         ui->spinThreads->setEnabled(true);
+        ui->buttonPause->setChecked(false);
+        ui->buttonPause->setText(tr("Pause"));
+        ui->buttonPause->setEnabled(false);
+        sthread.pauseSearch(false);
         int type = ui->comboSearchType->currentData().toInt();
         ui->buttonMore->setEnabled(type == SEARCH_INC || type == SEARCH_LIST);
     }
@@ -424,6 +429,13 @@ void FormSearchControl::on_buttonStart_clicked()
     }
 
     update();
+}
+
+void FormSearchControl::on_buttonPause_clicked()
+{
+    bool pause = ui->buttonPause->isChecked();
+    sthread.pauseSearch(pause);
+    ui->buttonPause->setText(pause ? tr("Resume") : tr("Pause"));
 }
 
 void FormSearchControl::on_buttonMore_clicked()

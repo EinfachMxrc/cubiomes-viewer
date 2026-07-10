@@ -572,6 +572,7 @@ void SearchMaster::startSearch()
 {
     stopSearch();
     stop = false;
+    paused = false;
     preSearch();
 
     if (stop)
@@ -936,6 +937,10 @@ SearchWorker::~SearchWorker()
 
 bool SearchWorker::getNextItem()
 {
+    // hold the worker here while paused, without touching master state, so
+    // search progress is preserved and resumes exactly where it left off
+    while (master->paused.load() && !*env.stop)
+        QThread::msleep(50);
     QMutexLocker locker(&master->mutex);
     return master->requestItem(this);
 }

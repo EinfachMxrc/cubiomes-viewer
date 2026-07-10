@@ -126,6 +126,7 @@ public slots:
 
     void on_buttonClear_clicked();
     void on_buttonStart_clicked();
+    void on_buttonPause_clicked();
     void on_buttonMore_clicked();
 
     void onSort(int column, Qt::SortOrder);

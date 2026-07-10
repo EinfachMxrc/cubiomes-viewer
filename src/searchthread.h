@@ -41,6 +41,8 @@ public:
 
     void startSearch();
     void stopSearch();
+    void pauseSearch(bool p) { paused = p; }
+    bool isPaused() const { return paused; }
 
     // Get search progress:
     //  status  : progress status summary
@@ -70,6 +72,7 @@ public:
 
     QMutex                      mutex;
     std::atomic_bool            stop;
+    std::atomic_bool            paused;
 
     std::deque<TProg>           proghist;
     QElapsedTimer               progtimer;
