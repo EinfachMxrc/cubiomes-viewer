@@ -45,7 +45,7 @@ enum {
 struct Reader {
     const uint8_t *p;
     const uint8_t *end;
-    bool ok = true;
+    bool ok;
 
     bool have(size_t n) { return ok && (size_t)(end - p) >= n; }
     uint8_t u8() { if (!have(1)) { ok = false; return 0; } return *p++; }
@@ -137,7 +137,7 @@ void walkCompound(Reader &r, const std::string &parentName, Found &f)
 bool parseLevelDatNbt(const uint8_t *data, size_t len,
                       int64_t *seed, std::string *version)
 {
-    Reader r{data, data + len};
+    Reader r{data, data + len, true};
     int t = r.u8();
     if (t != TAG_Compound)
         return false;
