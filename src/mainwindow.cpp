@@ -11,7 +11,12 @@
 #include "message.h"
 #include "netherroutedialog.h"
 #include "presetdialog.h"
+#include "worldimport.h"
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QFileInfo>
 #include <QMessageBox>
+#include <QMimeData>
 #include "tabbiomes.h"
 #include "tablocations.h"
 #include "tabstructures.h"
@@ -82,6 +87,7 @@ MainWindow::MainWindow(QString sessionpath, QString resultspath, QWidget *parent
 
     ui->setupUi(this);
     resize(1600, 900);
+    setAcceptDrops(true);
 
     dock->setWidget(mapView);
     dock->setFeatures(QDockWidget::DockWidgetFloatable);
@@ -884,6 +890,104 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionGoto_triggered()
 {
     getMapView()->onGoto();
+}
+
+bool MainWindow::importWorldFromFile(const QString& path)
+{
+    QString datpath = path;
+    QFileInfo fi(path);
+    if (fi.isDir())
+        datpath = fi.absoluteFilePath() + "/level.dat";
+    QFile f(datpath);
+    if (!f.open(QIODevice::ReadOnly))
+    {
+        warn(this, tr("Import failed"), tr("Could not open %1").arg(datpath));
+        return false;
+    }
+    QByteArray raw = f.readAll();
+    std::string nbt = gunzipBytes((const uint8_t*)raw.constData(), raw.size());
+    if (nbt.empty())
+    {
+        warn(this, tr("Import failed"), tr("Not a valid (gzip) level.dat."));
+        return false;
+    }
+    int64_t seed = 0;
+    std::string ver;
+    if (!parseLevelDatNbt((const uint8_t*)nbt.data(), nbt.size(), &seed, &ver))
+    {
+        warn(this, tr("Import failed"), tr("No seed found in the level.dat."));
+        return false;
+    }
+
+    WorldInfo wi;
+    getSeed(&wi, false);
+    wi.seed = (uint64_t) seed;
+    QString note;
+    if (!ver.empty())
+    {
+        int mc = str2mc(ver.c_str());
+        if (mc != MC_UNDEF)
+        {
+            wi.mc = mc;
+            setMCList(g_extgen.experimentalVers);
+        }
+        else
+        {
+            note = tr("\nVersion \"%1\" is not recognized; keeping the current version.")
+                       .arg(QString::fromStdString(ver));
+        }
+    }
+    setSeed(wi, getDim());
+    QMessageBox::information(this, tr("World imported"),
+        tr("Seed: %1\nVersion: %2%3")
+            .arg((qint64)seed)
+            .arg(ver.empty() ? tr("(unknown)") : QString::fromStdString(ver))
+            .arg(note));
+    return true;
+}
+
+void MainWindow::on_actionImportWorld_triggered()
+{
+    QString path = QFileDialog::getOpenFileName(this, tr("Select level.dat"),
+        prevdir, tr("Minecraft level (level.dat);;All files (*)"));
+    if (!path.isEmpty())
+    {
+        prevdir = QFileInfo(path).absolutePath();
+        importWorldFromFile(path);
+    }
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+    {
+        for (const QUrl& u : event->mimeData()->urls())
+        {
+            QFileInfo fi(u.toLocalFile());
+            if (fi.isDir() || fi.fileName().compare("level.dat", Qt::CaseInsensitive) == 0)
+            {
+                event->acceptProposedAction();
+                return;
+            }
+        }
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    if (!event->mimeData()->hasUrls())
+        return;
+    for (const QUrl& u : event->mimeData()->urls())
+    {
+        QString local = u.toLocalFile();
+        QFileInfo fi(local);
+        if (fi.isDir() || fi.fileName().compare("level.dat", Qt::CaseInsensitive) == 0)
+        {
+            prevdir = fi.isDir() ? fi.absoluteFilePath() : fi.absolutePath();
+            importWorldFromFile(local);
+            return;
+        }
+    }
 }
 
 void MainWindow::on_actionNetherRoute_triggered()

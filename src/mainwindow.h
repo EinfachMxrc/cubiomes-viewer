@@ -55,8 +55,11 @@ public:
     bool setSeed(WorldInfo wi, int dim = DIM_UNDEF);
     int getDim();
     MapView *getMapView();
+    bool importWorldFromFile(const QString& path);
 
 protected:
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
     void saveSettings();
     void loadSettings();
     bool saveSession(QString path, bool quiet);
@@ -88,6 +91,7 @@ private slots:
     void on_actionLoad_triggered();
     void on_actionQuit_triggered();
     void on_actionPreferences_triggered();
+    void on_actionImportWorld_triggered();
     void on_actionGoto_triggered();
     void on_actionNetherRoute_triggered();
     void on_actionCaveScan_triggered();

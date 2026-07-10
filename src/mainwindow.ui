@@ -431,6 +431,7 @@ QToolButton:checked {
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
+    <addaction name="actionImportWorld"/>
     <addaction name="actionPresetLoad"/>
     <addaction name="separator"/>
     <addaction name="actionSearch_seed_list"/>
@@ -541,6 +542,14 @@ QToolButton:checked {
   <action name="actionCopy">
    <property name="text">
     <string>Copy seeds from list</string>
+   </property>
+  </action>
+  <action name="actionImportWorld">
+   <property name="text">
+    <string>Import world (level.dat)...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load seed and version from a world's level.dat (or drag one onto the window)</string>
    </property>
   </action>
   <action name="actionNetherRoute">

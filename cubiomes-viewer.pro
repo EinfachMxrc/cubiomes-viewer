@@ -81,7 +81,7 @@ SOURCES += \
         $$CUPATH/terrainnoise.c \
         $$CUPATH/util.c \
         $$CUPATH/xradv.c
-LIBS   += -lm
+LIBS   += -lm -lz
 
 LUAPATH = $$PWD/lua/src
 
@@ -145,6 +145,7 @@ SOURCES += \
         src/tabbiomes.cpp \
         src/tablocations.cpp \
         src/tabstructures.cpp \
+        src/worldimport.cpp \
         src/mainwindow.cpp \
         src/main.cpp \
         src/util.cpp \
@@ -213,6 +214,7 @@ HEADERS += \
         src/tabbiomes.h \
         src/tablocations.h \
         src/tabstructures.h \
+        src/worldimport.h \
         src/mainwindow.h \
         src/util.h \
         src/widgets.h \
