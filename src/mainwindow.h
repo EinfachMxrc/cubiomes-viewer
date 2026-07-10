@@ -90,6 +90,7 @@ private slots:
     void on_actionPreferences_triggered();
     void on_actionGoto_triggered();
     void on_actionNetherRoute_triggered();
+    void on_actionCaveScan_triggered();
     void on_actionOpenShadow_triggered();
     void on_actionToolbarConfig_triggered();
     void on_actionBiomeColors_triggered();

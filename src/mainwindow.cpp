@@ -11,6 +11,7 @@
 #include "message.h"
 #include "netherroutedialog.h"
 #include "presetdialog.h"
+#include <QMessageBox>
 #include "tabbiomes.h"
 #include "tablocations.h"
 #include "tabstructures.h"
@@ -891,6 +892,51 @@ void MainWindow::on_actionNetherRoute_triggered()
     NetherRouteDialog *dialog = new NetherRouteDialog(mv, (int)mv->getX(), (int)mv->getZ());
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
+}
+
+void MainWindow::on_actionCaveScan_triggered()
+{
+    QWorld *w = getMapView()->world;
+    if (!w)
+    {
+        warn(this, tr("No world"), tr("Apply a seed first."));
+        return;
+    }
+    int x = (int) getMapView()->getX();
+    int z = (int) getMapView()->getZ();
+
+    // report the Y band of each cave biome present in the column at (x,z)
+    const int caves[] = { dripstone_caves, lush_caves, deep_dark, sulfur_caves };
+    const int ymin = -64, ymax = 192, step = 2;
+
+    QString out = QString("Cave biomes at x=%1 z=%2 (MC %3):\n")
+                      .arg(x).arg(z).arg(mc2str(w->wi.mc));
+    bool any = false;
+    for (int biome : caves)
+    {
+        if (!biomeExists(w->wi.mc, biome))
+            continue;
+        int lo = 999, hi = -999;
+        for (int y = ymin; y <= ymax; y += step)
+        {
+            if (getBiomeAt(&w->g, 1, x, y, z) == biome)
+            {
+                if (y < lo) lo = y;
+                if (y > hi) hi = y;
+            }
+        }
+        if (hi >= lo)
+        {
+            any = true;
+            out += QString("  %1: Y %2 to %3\n")
+                       .arg(getBiomeDisplay(w->wi.mc, biome)).arg(lo).arg(hi);
+        }
+    }
+    if (!any)
+        out += tr("  none in this column\n");
+
+    QGuiApplication::clipboard()->setText(out);
+    QMessageBox::information(this, tr("Cave scan"), out);
 }
 
 void MainWindow::on_actionOpenShadow_triggered()
