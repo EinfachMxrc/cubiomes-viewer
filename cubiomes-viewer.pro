@@ -15,6 +15,11 @@ QMAKE_CFLAGS            = $$CHARSET -fwrapv -DSTRUCT_CONFIG_OVERRIDE=1
 QMAKE_CXXFLAGS          = $$QMAKE_CFLAGS
 # cubiomes (xpple fork) uses C23 constructs (labels before declarations)
 QMAKE_CFLAGS           += -std=gnu2x
+
+# embed the cubiomes submodule commit for the diagnostics export
+CUBIOMES_COMMIT = $$system(git -C $$PWD/cubiomes rev-parse --short HEAD)
+isEmpty(CUBIOMES_COMMIT): CUBIOMES_COMMIT = unknown
+DEFINES += CUBIOMES_COMMIT=\\\"$$CUBIOMES_COMMIT\\\"
 QMAKE_CXXFLAGS_RELEASE  *= -O3 -g3
 
 greaterThan(QT_MAJOR_VERSION, 5) {

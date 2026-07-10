@@ -22,6 +22,8 @@
 
 #include <QBuffer>
 #include <QByteArray>
+#include <QClipboard>
+#include <QSysInfo>
 #include <QDataStream>
 #include <QDateTime>
 #include <QDebug>
@@ -953,6 +955,32 @@ void MainWindow::on_actionAbout_triggered()
 {
     AboutDialog *dialog = new AboutDialog(this);
     dialog->show();
+}
+
+void MainWindow::on_actionCopyDiagnostics_triggered()
+{
+    WorldInfo wi;
+    getSeed(&wi, false);
+    int dim = getDim();
+    const char *dimname = dim < 0 ? "nether" : dim > 0 ? "end" : "overworld";
+    MapView *mv = getMapView();
+    qreal cx = mv->getX(), cz = mv->getZ();
+
+    QString diag;
+    diag += QString("cubiomes-viewer %1 (cubiomes %2)\n")
+                .arg(getVersStr()).arg(CUBIOMES_COMMIT);
+    diag += QString("Qt %1, %2\n")
+                .arg(QT_VERSION_STR).arg(QSysInfo::prettyProductName());
+    diag += QString("MC:    %1\n").arg(mc2str(wi.mc));
+    diag += QString("seed:  %1\n").arg((int64_t)wi.seed);
+    diag += QString("dim:   %1\n").arg(dimname);
+    diag += QString("view:  x=%1 z=%2 (scale 1:%3)\n")
+                .arg((int)cx).arg((int)cz)
+                .arg(QString::number(mv->getScale(), 'g', 3));
+    diag += QString("Y:     %1\n").arg(wi.y);
+    diag += QString("large biomes: %1").arg(wi.large ? "yes" : "no");
+
+    QGuiApplication::clipboard()->setText(diag);
 }
 
 void MainWindow::on_actionCopy_triggered()

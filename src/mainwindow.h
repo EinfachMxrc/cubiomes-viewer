@@ -95,6 +95,7 @@ private slots:
     void on_actionPresetLoad_triggered();
     void on_actionExamples_triggered();
     void on_actionAbout_triggered();
+    void on_actionCopyDiagnostics_triggered();
     void on_actionCopy_triggered();
     void on_actionPaste_triggered();
     void on_actionAddShadow_triggered();

@@ -419,6 +419,7 @@ QToolButton:checked {
     </property>
     <addaction name="actionExamples"/>
     <addaction name="separator"/>
+    <addaction name="actionCopyDiagnostics"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuFile">
@@ -486,6 +487,14 @@ QToolButton:checked {
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionCopyDiagnostics">
+   <property name="text">
+    <string>Copy diagnostics</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy version, seed and view info to the clipboard for bug reports</string>
    </property>
   </action>
   <action name="actionOpenShadow">
