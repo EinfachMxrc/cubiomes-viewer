@@ -13,6 +13,8 @@ QT += core widgets
 CHARSET                 = -finput-charset=UTF-8 -fexec-charset=UTF-8
 QMAKE_CFLAGS            = $$CHARSET -fwrapv -DSTRUCT_CONFIG_OVERRIDE=1
 QMAKE_CXXFLAGS          = $$QMAKE_CFLAGS
+# cubiomes (xpple fork) uses C23 constructs (labels before declarations)
+QMAKE_CFLAGS           += -std=gnu2x
 QMAKE_CXXFLAGS_RELEASE  *= -O3 -g3
 
 greaterThan(QT_MAJOR_VERSION, 5) {
@@ -57,17 +59,24 @@ static_gnu: {
     LIBS += -static -static-libgcc -static-libstdc++
 }
 
-CONFIG(debug, debug|release): {
-    CUTARGET = debug
-} else {
-    CUTARGET = release
-}
-
-# compile cubiomes
-CUPATH              = $$PWD/cubiomes
-QMAKE_PRE_LINK      += $(MAKE) -C $$CUPATH -f $$CUPATH/makefile CC=\"$$QMAKE_CC\" CFLAGS=\"$(CFLAGS) $$QMAKE_CFLAGS\" $$CUTARGET
-QMAKE_CLEAN         += $$CUPATH/*.o $$CUPATH/libcubiomes.a
-LIBS                += $$CUPATH/libcubiomes.a -lm
+# compile cubiomes inline (xpple fork has no makefile; CMake there is standalone)
+# object_parallel_to_source avoids the util.o name collision between
+# cubiomes/util.c and src/util.cpp
+CUPATH  = $$PWD/cubiomes
+CONFIG += object_parallel_to_source
+SOURCES += \
+        $$CUPATH/biomenoise.c \
+        $$CUPATH/biomes.c \
+        $$CUPATH/features/stronghold.c \
+        $$CUPATH/finders.c \
+        $$CUPATH/generator.c \
+        $$CUPATH/layers.c \
+        $$CUPATH/noise.c \
+        $$CUPATH/quadbase.c \
+        $$CUPATH/terrainnoise.c \
+        $$CUPATH/util.c \
+        $$CUPATH/xradv.c
+LIBS   += -lm
 
 LUAPATH = $$PWD/lua/src
 

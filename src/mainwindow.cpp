@@ -694,12 +694,18 @@ void MainWindow::setMCList(bool experimental)
     QStringList mclist;
     for (int mc = MC_NEWEST; mc > MC_UNDEF; mc--)
     {
+        // enum gaps without an assigned release have no name
+        const char *mcs = mc2str(mc);
+        if (!mcs || strcmp(mcs, "?") == 0)
+            continue;
         if (!experimental && mc != wi.mc)
         {
-            if (mc <= MC_1_0 || mc == MC_1_16_1 || mc == MC_1_19_2 || mc == MC_1_21_1 || mc == MC_1_21_WD)
+            if (mc <= MC_1_0 || mc == MC_1_16_1 || mc == MC_1_19_2 ||
+                mc == MC_1_21_1 || mc == MC_1_21_3 || mc == MC_1_21_4 ||
+                mc == MC_1_21_5 || mc == MC_1_21_9)
                 continue;
         }
-        mclist.append(mc2str(mc));
+        mclist.append(mcs);
     }
     const QString s = mc2str(wi.mc);
     ui->comboBoxMC->setEnabled(false);
