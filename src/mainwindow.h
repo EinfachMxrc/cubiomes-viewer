@@ -100,6 +100,7 @@ private slots:
     void on_actionCopyDiagnostics_triggered();
     void on_actionCopySeedContext_triggered();
     void on_actionCopy_triggered();
+    void on_actionCopyRanked_triggered();
     void on_actionPaste_triggered();
     void on_actionAddShadow_triggered();
     void on_actionRedistribute_triggered();

@@ -9,6 +9,9 @@
 
 #include <QAction>
 #include <QClipboard>
+
+#include <algorithm>
+#include <cmath>
 #include <QFileDialog>
 #include <QFontMetrics>
 #include <QMenu>
@@ -848,6 +851,44 @@ void FormSearchControl::copyResults()
     }
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(text);
+}
+
+void FormSearchControl::copyResultsRankedBySpawn()
+{
+    WorldInfo wi;
+    parent->getSeed(&wi, false);
+
+    struct Ranked { uint64_t seed; long long dist2; int sx, sz; };
+    std::vector<Ranked> rows;
+    Generator g;
+    setupGenerator(&g, wi.mc, wi.large ? LARGE_BIOMES : 0);
+
+    const int cap = 2000; // keep responsive; spawn estimation is not free
+    int n = ui->results->model()->rowCount();
+    bool truncated = n > cap;
+    for (int i = 0; i < n && (int)rows.size() < cap; i++)
+    {
+        uint64_t seed;
+        if (!getSeed(i, &seed))
+            continue;
+        applySeed(&g, DIM_OVERWORLD, seed);
+        Pos sp = getSpawn(&g);
+        long long d2 = (long long)sp.x * sp.x + (long long)sp.z * sp.z;
+        rows.push_back({seed, d2, sp.x, sp.z});
+    }
+
+    std::sort(rows.begin(), rows.end(),
+        [](const Ranked& a, const Ranked& b) { return a.dist2 < b.dist2; });
+
+    QString text;
+    for (const Ranked& r : rows)
+        text += QString("%1  spawn=(%2, %3)  dist=%4\n")
+                    .arg((qint64)r.seed).arg(r.sx).arg(r.sz)
+                    .arg((qint64)llround(std::sqrt((double)r.dist2)));
+    if (truncated)
+        text += QString("# ranked first %1 of %2 results\n").arg(cap).arg(n);
+
+    QGuiApplication::clipboard()->setText(text);
 }
 
 void FormSearchControl::keyReleaseEvent(QKeyEvent *event)

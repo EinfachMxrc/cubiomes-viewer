@@ -1063,6 +1063,11 @@ void MainWindow::on_actionCopy_triggered()
     formControl->copyResults();
 }
 
+void MainWindow::on_actionCopyRanked_triggered()
+{
+    formControl->copyResultsRankedBySpawn();
+}
+
 void MainWindow::on_actionPaste_triggered()
 {
     formControl->pasteResults();

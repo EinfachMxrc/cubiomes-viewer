@@ -444,6 +444,7 @@ QToolButton:checked {
     </property>
     <addaction name="actionCopy"/>
     <addaction name="actionCopySeedContext"/>
+    <addaction name="actionCopyRanked"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionAddShadow"/>
@@ -499,6 +500,9 @@ QToolButton:checked {
    <property name="toolTip">
     <string>Copy version, seed and view info to the clipboard for bug reports</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
   </action>
   <action name="actionOpenShadow">
    <property name="text">
@@ -546,6 +550,9 @@ QToolButton:checked {
    <property name="toolTip">
     <string>Convert between Overworld and Nether coordinates</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
+   </property>
   </action>
   <action name="actionCaveScan">
    <property name="text">
@@ -554,6 +561,17 @@ QToolButton:checked {
    <property name="toolTip">
     <string>Report the Y range of each cave biome in the column at the map centre</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+K</string>
+   </property>
+  </action>
+  <action name="actionCopyRanked">
+   <property name="text">
+    <string>Copy results ranked by spawn distance</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy the result seeds sorted by how close their world spawn is to the origin</string>
+   </property>
   </action>
   <action name="actionCopySeedContext">
    <property name="text">
@@ -561,6 +579,9 @@ QToolButton:checked {
    </property>
    <property name="toolTip">
     <string>Copy a shareable block with seed, version, coordinates and a /tp command</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
    </property>
   </action>
   <action name="actionPaste">

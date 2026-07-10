@@ -150,6 +150,7 @@ public slots:
     void removeCurrent();
     void copySeed();
     void copyResults();
+    void copyResultsRankedBySpawn();
 
 protected:
     void keyReleaseEvent(QKeyEvent *event) override;
