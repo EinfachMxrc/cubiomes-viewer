@@ -5,7 +5,12 @@ seed-finding utilities provided by [cubiomes](https://github.com/Cubitect/cubiom
 and a map viewer for the Minecraft biomes and structure generation.
 
 The tool is designed for high performance and supports Minecraft Java Edition
-main releases up to 1.21.
+main releases up to **26.2 "Chaos Cubed"**, including the Sulfur Caves biome.
+
+> This is a community fork that continues development past upstream 4.1.2.
+> It builds on the actively maintained [xpple/cubiomes](https://github.com/xpple/cubiomes)
+> library for versions 1.21.4–26.2. See [docs/support-matrix.md](docs/support-matrix.md)
+> for exactly what each version supports.
 
 
 ## Download
