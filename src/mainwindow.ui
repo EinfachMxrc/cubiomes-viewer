@@ -441,6 +441,7 @@ QToolButton:checked {
      <string>Edit</string>
     </property>
     <addaction name="actionCopy"/>
+    <addaction name="actionCopySeedContext"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionAddShadow"/>
@@ -534,6 +535,14 @@ QToolButton:checked {
   <action name="actionCopy">
    <property name="text">
     <string>Copy seeds from list</string>
+   </property>
+  </action>
+  <action name="actionCopySeedContext">
+   <property name="text">
+    <string>Copy seed context</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy a shareable block with seed, version, coordinates and a /tp command</string>
    </property>
   </action>
   <action name="actionPaste">

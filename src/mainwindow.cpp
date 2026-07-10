@@ -983,6 +983,26 @@ void MainWindow::on_actionCopyDiagnostics_triggered()
     QGuiApplication::clipboard()->setText(diag);
 }
 
+void MainWindow::on_actionCopySeedContext_triggered()
+{
+    WorldInfo wi;
+    getSeed(&wi, false);
+    int dim = getDim();
+    const char *dimname = dim < 0 ? "the Nether" : dim > 0 ? "the End" : "the Overworld";
+    MapView *mv = getMapView();
+    int x = (int)mv->getX(), z = (int)mv->getZ();
+
+    // A shareable block for Discord / bug reports, with a ready /tp command
+    // to the current map centre (Y from the biome sampling height).
+    QString ctx;
+    ctx += QString("Minecraft %1 seed: %2\n").arg(mc2str(wi.mc)).arg((int64_t)wi.seed);
+    ctx += QString("Location: x=%1 z=%2 in %3\n").arg(x).arg(z).arg(dimname);
+    ctx += QString("/tp @s %1 %2 %3\n").arg(x).arg(wi.y).arg(z);
+    ctx += QString("(cubiomes-viewer %1)").arg(getVersStr());
+
+    QGuiApplication::clipboard()->setText(ctx);
+}
+
 void MainWindow::on_actionCopy_triggered()
 {
     formControl->copyResults();
