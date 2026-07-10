@@ -84,10 +84,16 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
           Copy-Item release\cubiomes-viewer.exe dist\
+          # windeployqt can exit non-zero on a benign translations-catalog
+          # warning; ignore its exit code and verify the result instead.
           windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw dist\cubiomes-viewer.exe
+          if (-not (Test-Path dist\Qt6Core.dll)) {
+              throw "windeployqt did not deploy the Qt runtime (Qt6Core.dll missing)"
+          }
           Copy-Item README.md, LICENSE dist\
           Copy-Item docs\support-matrix.md dist\
           Compress-Archive -Path dist\* -DestinationPath cubiomes-viewer-windows.zip
+          exit 0
       - uses: actions/upload-artifact@v4
         with:
           name: cubiomes-viewer-windows
