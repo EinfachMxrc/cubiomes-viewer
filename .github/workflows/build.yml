@@ -82,18 +82,21 @@ jobs:
       - name: Package with Qt runtime
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force dist | Out-Null
+          # windeployqt on this MinGW Qt build aborts with "Unable to find
+          # the platform plugin", so deploy the runtime manually. The .pro
+          # statically links the MinGW C/C++ runtime (static_gnu), so only
+          # the Qt DLLs and the windows platform plugin are needed.
+          $qt = $env:QT_ROOT_DIR
+          New-Item -ItemType Directory -Force dist, dist\platforms | Out-Null
           Copy-Item release\cubiomes-viewer.exe dist\
-          # windeployqt can exit non-zero on a benign translations-catalog
-          # warning; ignore its exit code and verify the result instead.
-          windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw dist\cubiomes-viewer.exe
-          if (-not (Test-Path dist\Qt6Core.dll)) {
-              throw "windeployqt did not deploy the Qt runtime (Qt6Core.dll missing)"
+          foreach ($dll in 'Qt6Core.dll','Qt6Gui.dll','Qt6Widgets.dll') {
+              Copy-Item "$qt\bin\$dll" dist\
           }
-          Copy-Item README.md, LICENSE dist\
-          Copy-Item docs\support-matrix.md dist\
+          Copy-Item "$qt\plugins\platforms\qwindows.dll" dist\platforms\
+          $style = "$qt\plugins\styles\qwindowsvistastyle.dll"
+          if (Test-Path $style) { New-Item -ItemType Directory -Force dist\styles | Out-Null; Copy-Item $style dist\styles\ }
+          Copy-Item README.md, LICENSE, docs\support-matrix.md dist\
           Compress-Archive -Path dist\* -DestinationPath cubiomes-viewer-windows.zip
-          exit 0
       - uses: actions/upload-artifact@v4
         with:
           name: cubiomes-viewer-windows
